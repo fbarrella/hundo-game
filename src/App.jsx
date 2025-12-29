@@ -10,10 +10,12 @@ function App() {
   const getBasename = () => {
     const path = window.location.pathname;
     if (path.includes('/moderator/')) {
-      return path.split('/moderator/')[0];
+      const base = path.split('/moderator/')[0];
+      return base || '/';
     }
     if (path.includes('/play/')) {
-      return path.split('/play/')[0];
+      const base = path.split('/play/')[0];
+      return base || '/';
     }
     return '/'; // default to root
   };
