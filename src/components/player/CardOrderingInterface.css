@@ -56,6 +56,9 @@
 .sortable-card.dragging {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     transform: scale(1.05);
+    cursor: grabbing;
+    z-index: 9999;
+    pointer-events: none;
 }
 
 .card-position {

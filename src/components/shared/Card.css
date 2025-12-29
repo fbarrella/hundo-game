@@ -69,7 +69,7 @@
   font-weight: bold;
   font-family: 'Outfit', sans-serif;
   letter-spacing: 4px;
-  opacity: 0.6;
+  opacity: 0.2;
 }
 
 .card.theme-card {
@@ -92,16 +92,16 @@
     width: 100px;
     height: 140px;
   }
-  
+
   .card-number {
     font-size: 36px;
   }
-  
+
   .card.theme-card {
     width: 120px;
     height: 170px;
   }
-  
+
   .card.theme-card .card-number {
     font-size: 48px;
   }
