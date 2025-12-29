@@ -20,7 +20,7 @@ let db;
 try {
     app = initializeApp(firebaseConfig);
     db = getFirestore(app);
-    console.log('Firebase initialized successfully');
+    console.log('Firebase initialized successfully, starting project: ' + firebaseConfig.projectId);
 } catch (error) {
     console.error('Error initializing Firebase:', error);
 }
