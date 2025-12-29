@@ -183,7 +183,7 @@ export default function CardOrderingInterface({
                     </div>
                 </SortableContext>
 
-                <DragOverlay>
+                <DragOverlay dropAnimation={null}>
                     {activeCard && (
                         <div className="sortable-card player-card dragging">
                             <div className="card-position">{activeCard.position + 1}</div>
