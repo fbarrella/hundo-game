@@ -7,6 +7,7 @@ import { GAME_STATES } from '../config/gameConfig';
 import ThemeDisplay from '../components/shared/ThemeDisplay';
 import Card from '../components/shared/Card';
 import './ModeratorDashboard.css';
+import QRCode from "react-qr-code";
 
 export default function ModeratorDashboard() {
     const { roomId } = useParams();
@@ -116,6 +117,10 @@ export default function ModeratorDashboard() {
                         <div className="waiting-area">
                             <h2>Waiting to Start</h2>
                             <p>Players will join using the room code above</p>
+
+                            <div style={{ background: 'white', padding: '16px', borderRadius: '8px', margin: '20px auto', width: 'fit-content' }}>
+                                <QRCode value={generateRoomUrl(roomId)} size={128} />
+                            </div>
 
                             {playerCount > 0 && (
                                 <div className="players-grid">

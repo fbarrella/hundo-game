@@ -4,8 +4,30 @@
  * @returns {string} Full URL for players
  */
 export function generateRoomUrl(roomId) {
-    const baseUrl = window.location.origin;
-    return `${baseUrl}/play/${roomId}`;
+    // Get the current full URL
+    const currentUrl = window.location.href;
+
+    // If we are in the moderator view, replace it with play view
+    if (currentUrl.includes('/moderator/')) {
+        return currentUrl.replace('/moderator/', '/play/');
+    }
+
+    // Fallback: construct from origin + pathname base if possible, 
+    // or just use origin if we can't determine better.
+    // Ideally we want to keep the base path.
+    const baseUrl = window.location.origin + window.location.pathname;
+
+    // If we're at root, just append
+    if (baseUrl.endsWith('/')) {
+        return `${baseUrl}play/${roomId}`;
+    }
+
+    // If we are at a specific path like /hundo-game/
+    // We try to find where the app root is. 
+    // But simplest is assuming the user is on a valid page of the app.
+    // If they are on home '/', valid.
+
+    return `${window.location.origin}/play/${roomId}`;
 }
 
 /**

@@ -6,8 +6,20 @@ import PlayerView from './pages/PlayerView';
 import './index.css';
 
 function App() {
+  // Calculate basename relative to the current path if deployed in a subdirectory
+  const getBasename = () => {
+    const path = window.location.pathname;
+    if (path.includes('/moderator/')) {
+      return path.split('/moderator/')[0];
+    }
+    if (path.includes('/play/')) {
+      return path.split('/play/')[0];
+    }
+    return '/'; // default to root
+  };
+
   return (
-    <Router>
+    <Router basename={getBasename()}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/moderator/:roomId" element={<ModeratorDashboard />} />
