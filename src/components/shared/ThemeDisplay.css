@@ -1,0 +1,119 @@
+.theme-display {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 20px 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.theme-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.theme-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+
+.theme-card-number {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4);
+}
+
+.theme-scale {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+}
+
+.scale-marker {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.scale-marker.low {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.scale-marker.high {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.scale-text {
+    flex: 1;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.4;
+    font-family: 'Outfit', sans-serif;
+}
+
+.theme-range {
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .theme-display {
+        padding: 16px;
+    }
+
+    .theme-header h2 {
+        font-size: 20px;
+    }
+
+    .theme-scale {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .scale-text {
+        font-size: 16px;
+    }
+
+    .scale-marker {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,237 @@
+.player-view {
+    min-height: 100vh;
+    padding: var(--spacing-md);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.player-header {
+    margin-bottom: var(--spacing-lg);
+    animation: fadeInDown 0.4s ease-out;
+}
+
+.player-info {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-info h3 {
+    margin: 0;
+    font-size: 20px;
+    color: white;
+}
+
+.room-code {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 1px;
+}
+
+.player-content {
+    animation: fadeInUp 0.4s ease-out 0.1s both;
+}
+
+.waiting-state {
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.waiting-icon {
+    font-size: 64px;
+    margin-bottom: var(--spacing-md);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.waiting-state h2 {
+    margin-bottom: var(--spacing-sm);
+    color: white;
+}
+
+.waiting-state p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: var(--spacing-lg);
+}
+
+.player-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    margin-top: var(--spacing-md);
+}
+
+.player-chip {
+    background: var(--primary-gradient);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+}
+
+.round-ended {
+    text-align: center;
+}
+
+.result-banner {
+    padding: var(--spacing-xl);
+    border-radius: 20px;
+    margin-bottom: var(--spacing-lg);
+    animation: bounceIn 0.6s ease-out;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    70% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.result-banner.success {
+    background: linear-gradient(135deg, rgba(17, 153, 142, 0.3) 0%, rgba(56, 239, 125, 0.3) 100%);
+    border: 2px solid rgba(56, 239, 125, 0.5);
+}
+
+.result-banner.failure {
+    background: linear-gradient(135deg, rgba(235, 51, 73, 0.3) 0%, rgba(244, 92, 67, 0.3) 100%);
+    border: 2px solid rgba(244, 92, 67, 0.5);
+}
+
+.result-icon {
+    font-size: 72px;
+    margin-bottom: var(--spacing-md);
+}
+
+.result-banner h2 {
+    margin-bottom: var(--spacing-sm);
+    color: white;
+}
+
+.result-banner p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 18px;
+}
+
+.final-order {
+    margin: var(--spacing-xl) 0;
+}
+
+.final-order h3 {
+    margin-bottom: var(--spacing-lg);
+    color: white;
+}
+
+.cards-reveal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    justify-content: center;
+    padding: var(--spacing-lg);
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.card-reveal-item {
+    animation: flipIn 0.6s ease-out both;
+}
+
+.card-reveal-item:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.card-reveal-item:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.card-reveal-item:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.card-reveal-item:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.card-reveal-item:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.card-reveal-item:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.card-reveal-item:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+.card-reveal-item:nth-child(8) {
+    animation-delay: 0.8s;
+}
+
+@keyframes flipIn {
+    from {
+        transform: rotateY(-90deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: rotateY(0);
+        opacity: 1;
+    }
+}
+
+.waiting-text {
+    margin-top: var(--spacing-lg);
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .player-view {
+        padding: var(--spacing-sm);
+    }
+
+    .cards-reveal {
+        gap: var(--spacing-sm);
+        padding: var(--spacing-md);
+    }
+
+    .result-icon {
+        font-size: 56px;
+    }
+}

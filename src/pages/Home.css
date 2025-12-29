@@ -1,0 +1,221 @@
+.home-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-lg);
+}
+
+.home-content {
+    max-width: 900px;
+    width: 100%;
+}
+
+.home-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.game-title {
+    font-size: 96px;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: 8px;
+    font-family: var(--font-display);
+}
+
+.game-subtitle {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+.home-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.action-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: var(--spacing-xl);
+    text-align: center;
+    transition: all var(--transition-normal);
+}
+
+.action-card:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.action-card h2 {
+    margin-bottom: var(--spacing-sm);
+    color: white;
+}
+
+.action-card p {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: var(--spacing-lg);
+    font-size: 16px;
+}
+
+.btn-large {
+    padding: 18px 36px;
+    font-size: 18px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.divider {
+    text-align: center;
+    position: relative;
+    margin: var(--spacing-md) 0;
+}
+
+.divider span {
+    background: var(--dark-bg);
+    padding: 0 var(--spacing-md);
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.join-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.join-form input {
+    max-width: 400px;
+    text-align: center;
+    font-size: 20px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.game-rules {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: var(--spacing-xl);
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.game-rules h3 {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    color: white;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.rule-item {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: flex-start;
+}
+
+.rule-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.rule-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.rule-text strong {
+    color: white;
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 64px;
+        letter-spacing: 4px;
+    }
+
+    .game-subtitle {
+        font-size: 16px;
+    }
+
+    .action-card {
+        padding: var(--spacing-lg);
+    }
+
+    .rules-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-large {
+        font-size: 16px;
+        padding: 16px 28px;
+    }
+}
