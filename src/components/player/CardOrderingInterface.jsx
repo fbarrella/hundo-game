@@ -116,6 +116,11 @@ export default function CardOrderingInterface({
                 Use the arrows to arrange your cards in the correct order
             </p>
 
+            <div className="order-indicator-top">
+                <div className="order-label">LOWEST</div>
+                <div className="order-arrow">↓</div>
+            </div>
+
             <div className="cards-order-list">
                 {orderedCards.map((card, index) => {
                     const isPlayerCard = card.playerId === playerId;
@@ -135,6 +140,11 @@ export default function CardOrderingInterface({
                         />
                     );
                 })}
+            </div>
+
+            <div className="order-indicator-bottom">
+                <div className="order-arrow">↓</div>
+                <div className="order-label">HIGHEST</div>
             </div>
 
             {updating && (
