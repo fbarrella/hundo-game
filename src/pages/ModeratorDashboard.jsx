@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useRoomPolling } from '../services/pollingService';
 import { startRound, endRound, resetRound } from '../services/gameService';
 import { generateRoomUrl, copyToClipboard } from '../utils/urlUtils';
-import { GAME_STATES } from '../config/gameConfig';
+import { GAME_STATES, GAME_MODES } from '../config/gameConfig';
 import ThemeDisplay from '../components/shared/ThemeDisplay';
 import Card from '../components/shared/Card';
 import hundoLogoText from '../assets/hundo_logo_text_only.png';
@@ -15,6 +15,7 @@ export default function ModeratorDashboard() {
     const { roomData, loading, error, refetch } = useRoomPolling(roomId);
     const [actionLoading, setActionLoading] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
+    const [gameMode, setGameMode] = useState(GAME_MODES.ADVENTUROUS);
 
     const handleCopyUrl = async () => {
         const url = generateRoomUrl(roomId);
@@ -28,7 +29,7 @@ export default function ModeratorDashboard() {
     const handleStartRound = async () => {
         setActionLoading(true);
         try {
-            await startRound(roomId, roomData);
+            await startRound(roomId, roomData, gameMode);
             await refetch();
         } catch (error) {
             alert('Failed to start round: ' + error.message);
@@ -138,6 +139,38 @@ export default function ModeratorDashboard() {
                                     ))}
                                 </div>
                             )}
+
+                            <div className="difficulty-selector">
+                                <h3>Select Difficulty Mode</h3>
+                                <div className="mode-options">
+                                    <label className={`mode-option ${gameMode === GAME_MODES.SIMPLIFIED ? 'selected' : ''}`}>
+                                        <input
+                                            type="radio"
+                                            name="gameMode"
+                                            value={GAME_MODES.SIMPLIFIED}
+                                            checked={gameMode === GAME_MODES.SIMPLIFIED}
+                                            onChange={(e) => setGameMode(e.target.value)}
+                                        />
+                                        <div className="mode-content">
+                                            <div className="mode-name">Simplified</div>
+                                            <div className="mode-description">1 card per player</div>
+                                        </div>
+                                    </label>
+                                    <label className={`mode-option ${gameMode === GAME_MODES.ADVENTUROUS ? 'selected' : ''}`}>
+                                        <input
+                                            type="radio"
+                                            name="gameMode"
+                                            value={GAME_MODES.ADVENTUROUS}
+                                            checked={gameMode === GAME_MODES.ADVENTUROUS}
+                                            onChange={(e) => setGameMode(e.target.value)}
+                                        />
+                                        <div className="mode-content">
+                                            <div className="mode-name">Adventurous</div>
+                                            <div className="mode-description">2 cards per player</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
 
                             <button
                                 className="btn-success btn-large"

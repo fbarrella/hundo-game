@@ -10,6 +10,11 @@ export const GAME_CONFIG = {
     CARDS_PER_THEME: 5
 };
 
+export const GAME_MODES = {
+    SIMPLIFIED: 'simplified',
+    ADVENTUROUS: 'adventurous'
+};
+
 export const GAME_STATES = {
     WAITING: 'waiting',
     PLAYING: 'playing',
