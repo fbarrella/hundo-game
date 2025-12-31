@@ -65,11 +65,11 @@
 }
 
 .card-pattern {
-  font-size: 32px;
+  font-size: 30px;
   font-weight: bold;
   font-family: 'Outfit', sans-serif;
   letter-spacing: 4px;
-  opacity: 0.2;
+  opacity: 0.1;
 }
 
 .card.theme-card {
