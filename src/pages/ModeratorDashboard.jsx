@@ -6,6 +6,7 @@ import { generateRoomUrl, copyToClipboard } from '../utils/urlUtils';
 import { GAME_STATES } from '../config/gameConfig';
 import ThemeDisplay from '../components/shared/ThemeDisplay';
 import Card from '../components/shared/Card';
+import hundoLogoText from '../assets/hundo_logo_text_only.png';
 import './ModeratorDashboard.css';
 import QRCode from "react-qr-code";
 
@@ -89,7 +90,10 @@ export default function ModeratorDashboard() {
         <div className="moderator-dashboard">
             <div className="moderator-header">
                 <div className="header-left">
-                    <h1>Hundo - Moderator View</h1>
+                    <h1>
+                        <img src={hundoLogoText} alt="Hundo" className="moderator-logo" />
+                        <span> - Moderator View</span>
+                    </h1>
                     <div className="room-info">
                         <div className="room-code-display">
                             <span className="label">Room Code:</span>

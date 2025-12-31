@@ -41,13 +41,17 @@
   transform: rotateY(180deg);
   color: white;
   padding: 16px;
+  z-index: 2;
 }
 
 .card-number {
   font-size: 48px;
   font-weight: bold;
   font-family: 'Outfit', sans-serif;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.4);
+  position: relative;
+  z-index: 10;
+  opacity: 1;
 }
 
 .card-player {
@@ -56,20 +60,28 @@
   opacity: 0.9;
   text-align: center;
   font-weight: 500;
+  position: relative;
+  z-index: 10;
 }
 
 .card-back {
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   color: white;
   border: 3px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  z-index: 1;
 }
 
 .card-pattern {
-  font-size: 30px;
-  font-weight: bold;
-  font-family: 'Outfit', sans-serif;
-  letter-spacing: 4px;
-  opacity: 0.1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: auto;
+  opacity: 0.15;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .card.theme-card {
