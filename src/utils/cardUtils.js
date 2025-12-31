@@ -76,7 +76,8 @@ export function getAllCardsInOrder(players) {
                 playerName: player.name,
                 cardNumber,
                 cardIndex,
-                position: player.cardPositions?.[cardIndex] ?? 999 // Default to end if not positioned
+                position: player.cardPositions?.[cardIndex] ?? 999, // Default to end if not positioned
+                scaleLabel: player.scaleLabels?.[cardIndex] ?? ''
             });
         });
     });

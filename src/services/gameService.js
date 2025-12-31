@@ -21,13 +21,15 @@ export async function startRound(roomId, roomData) {
         const { distribution, themeCard } = distributeCards(playerIds);
         const theme = getThemeFromCard(themeCard);
 
-        // Update each player with their cards
+        // Update each player with their cards and assign sequential positions
         const updatedPlayers = { ...roomData.players };
+        let currentPosition = 0;
         Object.entries(distribution).forEach(([playerId, cards]) => {
             updatedPlayers[playerId] = {
                 ...updatedPlayers[playerId],
                 cards,
-                cardPositions: [999, 999] // Default positions (not placed yet)
+                cardPositions: cards.map(() => currentPosition++),
+                scaleLabels: cards.map(() => '')
             };
         });
 
@@ -62,14 +64,39 @@ export async function updateCardPosition(roomId, playerId, cardIndex, position, 
             throw new Error('Player not found');
         }
 
-        // Update the card position
+        const oldPosition = player.cardPositions[cardIndex];
+
+        // Find the card currently at the target position
+        let displacedPlayerId = null;
+        let displacedCardIndex = null;
+
+        for (const [pid, p] of Object.entries(updatedPlayers)) {
+            const idx = p.cardPositions?.findIndex(pos => pos === position);
+            if (idx !== -1 && !(pid === playerId && idx === cardIndex)) {
+                displacedPlayerId = pid;
+                displacedCardIndex = idx;
+                break;
+            }
+        }
+
+        // Update the moving card's position
         const newPositions = [...player.cardPositions];
         newPositions[cardIndex] = position;
-
         updatedPlayers[playerId] = {
             ...player,
             cardPositions: newPositions
         };
+
+        // Swap: move the displaced card to the old position
+        if (displacedPlayerId !== null) {
+            const displacedPlayer = updatedPlayers[displacedPlayerId];
+            const displacedPositions = [...displacedPlayer.cardPositions];
+            displacedPositions[displacedCardIndex] = oldPosition;
+            updatedPlayers[displacedPlayerId] = {
+                ...displacedPlayer,
+                cardPositions: displacedPositions
+            };
+        }
 
         await updateRoom(roomId, {
             players: updatedPlayers
@@ -121,7 +148,8 @@ export async function resetRound(roomId, roomData) {
             updatedPlayers[playerId] = {
                 ...updatedPlayers[playerId],
                 cards: [],
-                cardPositions: []
+                cardPositions: [],
+                scaleLabels: []
             };
         });
 
@@ -135,6 +163,41 @@ export async function resetRound(roomId, roomData) {
         });
     } catch (error) {
         console.error('Error resetting round:', error);
+        throw error;
+    }
+}
+
+/**
+ * Update a player's scale label for a card
+ * @param {string} roomId - Room ID
+ * @param {string} playerId - Player ID
+ * @param {number} cardIndex - Index of the card (0 or 1)
+ * @param {string} label - Scale label text
+ * @param {Object} roomData - Current room data
+ * @returns {Promise<void>}
+ */
+export async function updateScaleLabel(roomId, playerId, cardIndex, label, roomData) {
+    try {
+        const updatedPlayers = { ...roomData.players };
+        const player = updatedPlayers[playerId];
+
+        if (!player) {
+            throw new Error('Player not found');
+        }
+
+        const newLabels = [...(player.scaleLabels || [])];
+        newLabels[cardIndex] = label;
+
+        updatedPlayers[playerId] = {
+            ...player,
+            scaleLabels: newLabels
+        };
+
+        await updateRoom(roomId, {
+            players: updatedPlayers
+        });
+    } catch (error) {
+        console.error('Error updating scale label:', error);
         throw error;
     }
 }
