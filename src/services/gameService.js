@@ -28,7 +28,8 @@ export async function startRound(roomId, roomData) {
             updatedPlayers[playerId] = {
                 ...updatedPlayers[playerId],
                 cards,
-                cardPositions: cards.map(() => currentPosition++)
+                cardPositions: cards.map(() => currentPosition++),
+                scaleLabels: cards.map(() => '')
             };
         });
 
@@ -64,11 +65,11 @@ export async function updateCardPosition(roomId, playerId, cardIndex, position, 
         }
 
         const oldPosition = player.cardPositions[cardIndex];
-        
+
         // Find the card currently at the target position
         let displacedPlayerId = null;
         let displacedCardIndex = null;
-        
+
         for (const [pid, p] of Object.entries(updatedPlayers)) {
             const idx = p.cardPositions?.findIndex(pos => pos === position);
             if (idx !== -1 && !(pid === playerId && idx === cardIndex)) {
@@ -147,7 +148,8 @@ export async function resetRound(roomId, roomData) {
             updatedPlayers[playerId] = {
                 ...updatedPlayers[playerId],
                 cards: [],
-                cardPositions: []
+                cardPositions: [],
+                scaleLabels: []
             };
         });
 
@@ -161,6 +163,41 @@ export async function resetRound(roomId, roomData) {
         });
     } catch (error) {
         console.error('Error resetting round:', error);
+        throw error;
+    }
+}
+
+/**
+ * Update a player's scale label for a card
+ * @param {string} roomId - Room ID
+ * @param {string} playerId - Player ID
+ * @param {number} cardIndex - Index of the card (0 or 1)
+ * @param {string} label - Scale label text
+ * @param {Object} roomData - Current room data
+ * @returns {Promise<void>}
+ */
+export async function updateScaleLabel(roomId, playerId, cardIndex, label, roomData) {
+    try {
+        const updatedPlayers = { ...roomData.players };
+        const player = updatedPlayers[playerId];
+
+        if (!player) {
+            throw new Error('Player not found');
+        }
+
+        const newLabels = [...(player.scaleLabels || [])];
+        newLabels[cardIndex] = label;
+
+        updatedPlayers[playerId] = {
+            ...player,
+            scaleLabels: newLabels
+        };
+
+        await updateRoom(roomId, {
+            players: updatedPlayers
+        });
+    } catch (error) {
+        console.error('Error updating scale label:', error);
         throw error;
     }
 }
