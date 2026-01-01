@@ -1,15 +1,16 @@
 import { updateRoom } from './roomService';
 import { distributeCards, validateCardOrder, getAllCardsInOrder } from '../utils/cardUtils';
 import { getThemeFromCard } from '../config/themes';
-import { GAME_STATES } from '../config/gameConfig';
+import { GAME_STATES, GAME_MODES } from '../config/gameConfig';
 
 /**
  * Start a new round - shuffle cards, distribute to players, reveal theme
  * @param {string} roomId - Room ID
  * @param {Object} roomData - Current room data
+ * @param {string} gameMode - Game mode (simplified or adventurous)
  * @returns {Promise<void>}
  */
-export async function startRound(roomId, roomData) {
+export async function startRound(roomId, roomData, gameMode = GAME_MODES.ADVENTUROUS) {
     try {
         const playerIds = Object.keys(roomData.players);
 
@@ -17,8 +18,11 @@ export async function startRound(roomId, roomData) {
             throw new Error('Need at least 2 players to start');
         }
 
+        // Determine cards per player based on game mode
+        const cardsPerPlayer = gameMode === GAME_MODES.SIMPLIFIED ? 1 : 2;
+
         // Distribute cards and get theme card
-        const { distribution, themeCard } = distributeCards(playerIds);
+        const { distribution, themeCard } = distributeCards(playerIds, cardsPerPlayer);
         const theme = getThemeFromCard(themeCard);
 
         // Update each player with their cards and assign sequential positions
@@ -35,6 +39,7 @@ export async function startRound(roomId, roomData) {
 
         await updateRoom(roomId, {
             gameState: GAME_STATES.PLAYING,
+            gameMode,
             themeCard,
             themeInterval: theme.interval,
             players: updatedPlayers,

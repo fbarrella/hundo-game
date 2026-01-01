@@ -30,15 +30,11 @@
 }
 
 .game-title {
-    font-size: 96px;
-    font-weight: 800;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    max-width: 400px;
+    width: 100%;
+    height: auto;
     margin-bottom: var(--spacing-sm);
-    letter-spacing: 8px;
-    font-family: var(--font-display);
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
 }
 
 .game-subtitle {
@@ -198,8 +194,7 @@
 /* Mobile responsive */
 @media (max-width: 768px) {
     .game-title {
-        font-size: 64px;
-        letter-spacing: 4px;
+        max-width: 280px;
     }
 
     .game-subtitle {

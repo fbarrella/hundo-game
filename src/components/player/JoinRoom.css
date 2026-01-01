@@ -14,14 +14,11 @@
 }
 
 .join-title {
-    font-size: 72px;
-    font-weight: 800;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    max-width: 300px;
+    width: 100%;
+    height: auto;
     margin-bottom: var(--spacing-lg);
-    letter-spacing: 6px;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
 }
 
 .join-room-code {
@@ -75,7 +72,7 @@
 
 @media (max-width: 768px) {
     .join-title {
-        font-size: 56px;
+        max-width: 220px;
     }
 
     .join-room-code span {

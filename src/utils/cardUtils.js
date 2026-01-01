@@ -25,20 +25,21 @@ export function createDeck() {
 /**
  * Shuffle and distribute cards to players
  * @param {Array} playerIds - Array of player IDs
+ * @param {number} cardsPerPlayer - Number of cards to distribute per player (defaults to 2)
  * @returns {Object} Object mapping player IDs to their cards
  */
-export function distributeCards(playerIds) {
+export function distributeCards(playerIds, cardsPerPlayer = GAME_CONFIG.CARDS_PER_PLAYER) {
     const deck = shuffleArray(createDeck());
     const distribution = {};
 
     playerIds.forEach((playerId, index) => {
-        const startIndex = index * GAME_CONFIG.CARDS_PER_PLAYER;
-        distribution[playerId] = deck.slice(startIndex, startIndex + GAME_CONFIG.CARDS_PER_PLAYER);
+        const startIndex = index * cardsPerPlayer;
+        distribution[playerId] = deck.slice(startIndex, startIndex + cardsPerPlayer);
     });
 
     return {
         distribution,
-        themeCard: deck[playerIds.length * GAME_CONFIG.CARDS_PER_PLAYER]
+        themeCard: deck[playerIds.length * cardsPerPlayer]
     };
 }
 

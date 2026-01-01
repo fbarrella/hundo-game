@@ -98,7 +98,11 @@ export default function PlayerView() {
                             themeInterval={roomData.themeInterval}
                         />
 
-                        <PlayerHand cards={player.cards} playerName={playerName} />
+                        <PlayerHand
+                            cards={player.cards}
+                            playerName={playerName}
+                            gameMode={roomData.gameMode}
+                        />
 
                         <CardOrderingInterface
                             roomId={roomId}

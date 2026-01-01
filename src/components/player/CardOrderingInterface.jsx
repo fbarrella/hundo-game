@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { updateCardPosition, updateScaleLabel } from '../../services/gameService';
 import { getAllCardsInOrder } from '../../utils/cardUtils';
 import './CardOrderingInterface.css';
@@ -14,8 +14,11 @@ function OrderableCard({ card, isPlayerCard, onMoveUp, onMoveDown, canMoveUp, ca
     const handleLabelChange = (e) => {
         const newLabel = e.target.value;
         setLocalLabel(newLabel);
+    };
+
+    const handleLabelBlur = () => {
         if (onLabelChange) {
-            onLabelChange(newLabel);
+            onLabelChange(localLabel);
         }
     };
 
@@ -33,6 +36,7 @@ function OrderableCard({ card, isPlayerCard, onMoveUp, onMoveDown, canMoveUp, ca
                             placeholder="e.g., 'Spicy foods'"
                             value={localLabel}
                             onChange={handleLabelChange}
+                            onBlur={handleLabelBlur}
                             disabled={isUpdating}
                             maxLength={50}
                         />
@@ -84,20 +88,12 @@ export default function CardOrderingInterface({
 }) {
     const [orderedCards, setOrderedCards] = useState([]);
     const [updating, setUpdating] = useState(false);
-    const labelTimeoutRef = useRef({});
 
     // Build the ordered cards list
     useEffect(() => {
         const allCards = getAllCardsInOrder(allPlayers);
         setOrderedCards(allCards);
     }, [allPlayers]);
-
-    // Cleanup timeouts on unmount
-    useEffect(() => {
-        return () => {
-            Object.values(labelTimeoutRef.current).forEach(timeout => clearTimeout(timeout));
-        };
-    }, []);
 
     const moveCard = async (cardIndex, direction) => {
         const currentIndex = orderedCards.findIndex(
@@ -144,21 +140,13 @@ export default function CardOrderingInterface({
         }
     };
 
-    const handleLabelChange = (cardIndex, newLabel) => {
-        // Clear existing timeout for this card
-        if (labelTimeoutRef.current[cardIndex]) {
-            clearTimeout(labelTimeoutRef.current[cardIndex]);
+    const handleLabelChange = async (cardIndex, newLabel) => {
+        try {
+            const roomData = { players: allPlayers };
+            await updateScaleLabel(roomId, playerId, cardIndex, newLabel, roomData);
+        } catch (error) {
+            console.error('Failed to update scale label:', error);
         }
-
-        // Debounce the update to Firebase
-        labelTimeoutRef.current[cardIndex] = setTimeout(async () => {
-            try {
-                const roomData = { players: allPlayers };
-                await updateScaleLabel(roomId, playerId, cardIndex, newLabel, roomData);
-            } catch (error) {
-                console.error('Failed to update scale label:', error);
-            }
-        }, 500); // 500ms debounce
     };
 
     return (

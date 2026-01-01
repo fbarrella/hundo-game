@@ -1,4 +1,5 @@
 import React from 'react';
+import hundoLogoFigure from '../../assets/hundo_logo_figure_only.png';
 import './Card.css';
 
 /**
@@ -22,11 +23,12 @@ export default function Card({
         >
             <div className="card-inner">
                 <div className="card-front">
+                    <img src={hundoLogoFigure} alt="Hundo" className="card-pattern" />
                     <div className="card-number">{number}</div>
                     {playerName && <div className="card-player">{playerName}</div>}
                 </div>
                 <div className="card-back">
-                    <div className="card-pattern">Hundo</div>
+                    <img src={hundoLogoFigure} alt="Hundo" className="card-pattern" />
                 </div>
             </div>
         </div>

@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="src/assets/hundo_logo.png" alt="Hundo Logo" width="300">
+</div>
+
 # Hundo - Multiplayer Card Game
 
 A browser-based collaborative card ordering game where players work together to arrange numbered cards in ascending order using creative theme scales.
@@ -7,19 +11,23 @@ A browser-based collaborative card ordering game where players work together to 
 ## 🎮 Game Overview
 
 Hundo is a cooperative multiplayer card game where:
-- Each player receives 2 secret numbered cards (1-100)
+- Each player receives 1-2 secret numbered cards (1-100) based on the selected difficulty mode
 - A theme card is revealed, setting a creative scale (e.g., "Worst nightmare → Dream come true")
-- Players must arrange all cards in ascending order by describing their cards using the theme
+- Players arrange all cards in ascending order by describing their cards using the theme and custom labels
+- Visual indicators help players understand the card order (LOWEST → HIGHEST)
 - If the final order is correct, everyone wins!
 
 ## 🚀 Features
 
-- **Real-time Multiplayer**: Room-based system with shareable URLs
+- **Real-time Multiplayer**: Room-based system with shareable URLs and QR codes
+- **Difficulty Modes**: Choose between Simplified (1 card) or Adventurous (2 cards) per player
+- **Custom Scale Labels**: Players can add personalized descriptions to their cards (e.g., "Spicy foods")
+- **Visual Order Indicators**: Clear LOWEST → HIGHEST markers help players arrange cards correctly
 - **Moderator View**: Desktop-optimized dashboard for game management
-- **Player View**: Mobile-optimized interface for gameplay
-- **Drag & Drop**: Intuitive card ordering interface
+- **Player View**: Mobile-optimized interface with intuitive arrow-based card ordering
 - **20 Unique Themes**: Funny and creative scales for each round
-- **Beautiful UI**: Modern design with animations and glassmorphism effects
+- **Beautiful UI**: Modern design with logo integration, animations, and glassmorphism effects
+- **Optimized Performance**: Smart database updates (scale labels update on blur to reduce API calls)
 
 ## 📋 Prerequisites
 
@@ -31,7 +39,8 @@ Hundo is a cooperative multiplayer card game where:
 
 1. **Clone the repository**
    ```bash
-   cd /home/fenetto/Documents/Repos/js/ito-game
+   git clone <repository-url>
+   cd hundo-game
    ```
 
 2. **Install dependencies**
@@ -101,34 +110,39 @@ npm run preview
 ### For Moderators (Game Host)
 
 1. Open the application and click **"Create Room (Moderator)"**
-2. Share the room code or player URL with participants
-3. Wait for players to join
-4. Click **"Start Round"** when ready (minimum 2 players)
-5. Monitor the game progress and card ordering
-6. Click **"End Round & Reveal"** to see results
-7. Start a new round or end the game
+2. Share the room code, player URL, or QR code with participants
+3. Wait for players to join (minimum 2 players)
+4. Select difficulty mode:
+   - **Simplified**: 1 card per player (easier, faster games)
+   - **Adventurous**: 2 cards per player (more challenging)
+5. Click **"Start Round"** when ready
+6. Monitor the game progress and card ordering
+7. Click **"End Round & Reveal"** to see results
+8. Start a new round or end the game
 
 ### For Players
 
-1. Receive the room code or URL from the moderator
+1. Receive the room code, URL, or scan the QR code from the moderator
 2. Enter your name to join the room
 3. Wait for the game to start
-4. View your 2 secret cards and the theme
-5. Drag your cards to position them in the overall order
-6. Describe your cards using the theme scale to help others
-7. Wait for the moderator to reveal the results
+4. View your secret card(s) (1-2 depending on difficulty) and the theme
+5. Use the up/down arrows to position your cards in the overall order
+6. Add custom scale labels to describe your cards (e.g., "Spicy foods" for the theme "Disgusting food → Delicious meal")
+7. Use the visual indicators (LOWEST at top, HIGHEST at bottom) to guide your ordering
+8. Collaborate with other players by sharing your custom labels
+9. Wait for the moderator to reveal the results
 
 ## 🏗️ Project Structure
 
 ```
-ito-game/
+hundo-game/
 ├── src/
+│   ├── assets/              # Logo images and static assets
 │   ├── components/
 │   │   ├── shared/          # Reusable components (Card, ThemeDisplay)
-│   │   ├── player/          # Player-specific components
-│   │   └── moderator/       # Moderator-specific components
+│   │   └── player/          # Player-specific components (PlayerHand, CardOrderingInterface)
 │   ├── config/              # Game configuration and themes
-│   ├── pages/               # Main page components
+│   ├── pages/               # Main page components (Home, PlayerView, ModeratorDashboard)
 │   ├── services/            # Firebase and game logic services
 │   ├── utils/               # Utility functions
 │   ├── App.jsx              # Main app with routing
@@ -160,10 +174,15 @@ Edit `src/config/gameConfig.js`:
 ```javascript
 export const GAME_CONFIG = {
   TOTAL_CARDS: 100,
-  CARDS_PER_PLAYER: 2,
-  POLLING_INTERVAL: 5000,  // Adjust polling frequency
+  CARDS_PER_PLAYER: 2,      // Default for adventurous mode
+  POLLING_INTERVAL: 5000,   // Adjust polling frequency
   MIN_PLAYERS: 2,
   MAX_PLAYERS: 10
+};
+
+export const GAME_MODES = {
+  SIMPLIFIED: 'simplified',    // 1 card per player
+  ADVENTUROUS: 'adventurous'   // 2 cards per player
 };
 ```
 
@@ -171,10 +190,11 @@ export const GAME_CONFIG = {
 
 - **Frontend**: React 18 with Vite
 - **Routing**: React Router DOM
-- **Drag & Drop**: @dnd-kit
+- **QR Codes**: react-qr-code
 - **Backend**: Firebase Firestore
 - **Styling**: Pure CSS with CSS variables
 - **State Management**: React hooks + Firebase polling (5-second intervals)
+- **UI Interactions**: Arrow-based card ordering with optimistic updates
 
 ## 📱 Browser Support
 

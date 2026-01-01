@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import hundoLogoText from '../../assets/hundo_logo_text_only.png';
 import './JoinRoom.css';
 
 export default function JoinRoom({ roomId, onJoin }) {
@@ -28,7 +29,7 @@ export default function JoinRoom({ roomId, onJoin }) {
     return (
         <div className="join-room-container">
             <div className="join-room-content">
-                <h1 className="join-title">Hundo</h1>
+                <img src={hundoLogoText} alt="Hundo" className="join-title" />
                 <div className="join-room-code">
                     Room Code: <span>{roomId}</span>
                 </div>

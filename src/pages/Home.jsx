@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createRoom } from '../services/roomService';
+import hundoLogo from '../assets/hundo_logo.png';
 import './Home.css';
 
 export default function Home() {
@@ -30,7 +31,7 @@ export default function Home() {
         <div className="home-container">
             <div className="home-content">
                 <div className="home-header">
-                    <h1 className="game-title">Hundo</h1>
+                    <img src={hundoLogo} alt="Hundo" className="game-title" />
                     <p className="game-subtitle">The Collaborative Card Ordering Game</p>
                 </div>
 

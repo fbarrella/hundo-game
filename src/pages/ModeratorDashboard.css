@@ -20,6 +20,15 @@
     margin-bottom: var(--spacing-md);
     font-size: 32px;
     color: white;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.moderator-logo {
+    height: 60px;
+    width: auto;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
 }
 
 .room-info {
@@ -146,6 +155,84 @@
 .player-name {
     font-weight: 600;
     color: white;
+}
+
+/* Difficulty Selector Styles */
+.difficulty-selector {
+    margin: var(--spacing-xl) 0;
+    padding: var(--spacing-lg);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+}
+
+.difficulty-selector h3 {
+    color: white;
+    margin-bottom: var(--spacing-md);
+    font-size: 20px;
+    text-align: center;
+}
+
+.mode-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+.mode-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.mode-option:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+.mode-option.selected {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, rgba(17, 153, 142, 0.2) 0%, rgba(56, 239, 125, 0.2) 100%);
+    box-shadow: 0 4px 20px rgba(56, 239, 125, 0.3);
+}
+
+.mode-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.mode-content {
+    flex: 1;
+    text-align: center;
+}
+
+.mode-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+}
+
+.mode-description {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.mode-option.selected .mode-name {
+    color: var(--accent-color);
+}
+
+.mode-option.selected .mode-description {
+    color: rgba(56, 239, 125, 0.8);
 }
 
 .warning-text {
@@ -421,6 +508,10 @@
         font-size: 24px;
     }
 
+    .moderator-logo {
+        height: 30px;
+    }
+
     .room-code-display .code {
         font-size: 18px;
     }
@@ -431,5 +522,9 @@
 
     .order-visualization {
         grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+
+    .mode-options {
+        grid-template-columns: 1fr;
     }
 }
