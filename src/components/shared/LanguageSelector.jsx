@@ -4,42 +4,41 @@ import './LanguageSelector.css';
 
 export default function LanguageSelector() {
     const { language, setLanguage } = useLanguage();
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleLanguageChange = (lang) => {
         setLanguage(lang);
-        // Auto-collapse after selection on mobile
-        setTimeout(() => setIsExpanded(false), 300);
+        setIsOpen(false);
     };
 
     return (
-        <div className={`language-selector ${isExpanded ? 'expanded' : ''}`}>
+        <div className={`lang-selector ${isOpen ? 'open' : ''}`}>
             <button
-                className="language-selector-toggle"
-                onClick={() => setIsExpanded(!isExpanded)}
+                className="lang-toggle"
+                onClick={() => setIsOpen(!isOpen)}
                 aria-label="Toggle language selector"
-                aria-expanded={isExpanded}
             >
-                <span className="toggle-icon">🌐</span>
+                🌐
             </button>
-            <div className="language-selector-buttons">
-                <button
-                    className={`language-button ${language === 'en' ? 'active' : ''}`}
-                    onClick={() => handleLanguageChange('en')}
-                    aria-label="English"
-                    title="English"
-                >
-                    🇬🇧
-                </button>
-                <button
-                    className={`language-button ${language === 'pt-BR' ? 'active' : ''}`}
-                    onClick={() => handleLanguageChange('pt-BR')}
-                    aria-label="Português Brasileiro"
-                    title="Português Brasileiro"
-                >
-                    🇧🇷
-                </button>
-            </div>
+
+            {isOpen && (
+                <div className="lang-options">
+                    <button
+                        className={`lang-option ${language === 'en' ? 'active' : ''}`}
+                        onClick={() => handleLanguageChange('en')}
+                        aria-label="English"
+                    >
+                        🇬🇧
+                    </button>
+                    <button
+                        className={`lang-option ${language === 'pt-BR' ? 'active' : ''}`}
+                        onClick={() => handleLanguageChange('pt-BR')}
+                        aria-label="Português"
+                    >
+                        🇧🇷
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
