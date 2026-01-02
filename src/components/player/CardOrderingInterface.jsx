@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { updateCardPosition, updateScaleLabel } from '../../services/gameService';
 import { getAllCardsInOrder } from '../../utils/cardUtils';
+import { useLanguage } from '../../contexts/LanguageContext';
 import './CardOrderingInterface.css';
 
 function OrderableCard({ card, isPlayerCard, onMoveUp, onMoveDown, canMoveUp, canMoveDown, isUpdating, onLabelChange }) {
+    const { t } = useLanguage();
     const [localLabel, setLocalLabel] = React.useState(card.scaleLabel || '');
 
     // Update local state when card.scaleLabel changes (from Firebase)
@@ -28,12 +30,12 @@ function OrderableCard({ card, isPlayerCard, onMoveUp, onMoveDown, canMoveUp, ca
             <div className="card-info">
                 {isPlayerCard ? (
                     <>
-                        <div className="card-label">Your Card</div>
+                        <div className="card-label">{t('cardOrdering.yourCard')}</div>
                         <div className="card-number-large">{card.cardNumber}</div>
                         <input
                             type="text"
                             className="scale-label-input"
-                            placeholder="e.g., 'Spicy foods'"
+                            placeholder={t('cardOrdering.scalePlaceholder')}
                             value={localLabel}
                             onChange={handleLabelChange}
                             onBlur={handleLabelBlur}
@@ -86,6 +88,7 @@ export default function CardOrderingInterface({
     playerPositions,
     allPlayers
 }) {
+    const { t } = useLanguage();
     const [orderedCards, setOrderedCards] = useState([]);
     const [updating, setUpdating] = useState(false);
 
@@ -151,13 +154,13 @@ export default function CardOrderingInterface({
 
     return (
         <div className="card-ordering-interface">
-            <h3>Card Order</h3>
+            <h3>{t('cardOrdering.cardOrder')}</h3>
             <p className="ordering-hint">
-                Use the arrows to arrange your cards in the correct order
+                {t('cardOrdering.orderingHint')}
             </p>
 
             <div className="order-indicator-top">
-                <div className="order-label">LOWEST</div>
+                <div className="order-label">{t('cardOrdering.lowest')}</div>
                 <div className="order-arrow">↓</div>
             </div>
 
@@ -185,13 +188,13 @@ export default function CardOrderingInterface({
 
             <div className="order-indicator-bottom">
                 <div className="order-arrow">↓</div>
-                <div className="order-label">HIGHEST</div>
+                <div className="order-label">{t('cardOrdering.highest')}</div>
             </div>
 
             {updating && (
                 <div className="updating-indicator">
                     <div className="spinner-small"></div>
-                    Updating...
+                    {t('cardOrdering.updating')}
                 </div>
             )}
         </div>
