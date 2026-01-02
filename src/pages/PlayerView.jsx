@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useRoomPolling } from '../services/pollingService';
 import { joinRoom } from '../services/roomService';
 import { GAME_STATES } from '../config/gameConfig';
+import { useLanguage } from '../contexts/LanguageContext';
+import LanguageSelector from '../components/shared/LanguageSelector';
 import JoinRoom from '../components/player/JoinRoom';
 import PlayerHand from '../components/player/PlayerHand';
 import CardOrderingInterface from '../components/player/CardOrderingInterface';
@@ -12,6 +14,8 @@ import './PlayerView.css';
 
 export default function PlayerView() {
     const { roomId } = useParams();
+    const navigate = useNavigate();
+    const { t } = useLanguage();
     const [playerId, setPlayerId] = useState(null);
     const [playerName, setPlayerName] = useState('');
     const { roomData, loading, error } = useRoomPolling(roomId);
@@ -38,11 +42,18 @@ export default function PlayerView() {
         }
     };
 
+    const handleReturnHome = () => {
+        // Clear local storage for this room
+        localStorage.removeItem(`playerId_${roomId}`);
+        localStorage.removeItem(`playerName_${roomId}`);
+        navigate('/');
+    };
+
     if (loading && !roomData) {
         return (
             <div className="loading-container">
                 <div className="spinner"></div>
-                <p>Loading room...</p>
+                <p>{t('playerView.loadingRoom')}</p>
             </div>
         );
     }
@@ -50,10 +61,14 @@ export default function PlayerView() {
     if (error) {
         return (
             <div className="player-view">
+                <LanguageSelector />
                 <div className="error-message">
-                    <h2>Error</h2>
-                    <p>{error}</p>
-                    <p>Room code: {roomId}</p>
+                    <h2>{t('playerView.error')}</h2>
+                    <p>{error.toLowerCase().includes('closed') ? t('playerView.roomEnded') : error}</p>
+                    <p>{t('playerView.room')} {roomId}</p>
+                    <button className="btn-primary" onClick={handleReturnHome}>
+                        {t('playerView.returnHome')}
+                    </button>
                 </div>
             </div>
         );
@@ -68,10 +83,11 @@ export default function PlayerView() {
 
     return (
         <div className="player-view">
+            <LanguageSelector />
             <div className="player-header">
                 <div className="player-info">
                     <h3>{playerName}</h3>
-                    <div className="room-code">Room: {roomId}</div>
+                    <div className="room-code">{t('playerView.room')} {roomId}</div>
                 </div>
             </div>
 
@@ -79,8 +95,8 @@ export default function PlayerView() {
                 {gameState === GAME_STATES.WAITING && (
                     <div className="waiting-state">
                         <div className="waiting-icon">⏳</div>
-                        <h2>Waiting for game to start...</h2>
-                        <p>Players in room: {Object.keys(roomData.players).length}</p>
+                        <h2>{t('playerView.waitingToStart')}</h2>
+                        <p>{t('playerView.playersInRoom')} {Object.keys(roomData.players).length}</p>
                         <div className="player-list">
                             {Object.values(roomData.players).map((p, idx) => (
                                 <div key={idx} className="player-chip">
@@ -120,20 +136,20 @@ export default function PlayerView() {
                             {roomData.isCorrectOrder ? (
                                 <>
                                     <div className="result-icon">🎉</div>
-                                    <h2>Perfect Order!</h2>
-                                    <p>Everyone wins!</p>
+                                    <h2>{t('playerView.perfectOrder')}</h2>
+                                    <p>{t('playerView.everyoneWins')}</p>
                                 </>
                             ) : (
                                 <>
                                     <div className="result-icon">😅</div>
-                                    <h2>Not Quite Right</h2>
-                                    <p>Let's try again!</p>
+                                    <h2>{t('playerView.notQuiteRight')}</h2>
+                                    <p>{t('playerView.tryAgain')}</p>
                                 </>
                             )}
                         </div>
 
                         <div className="final-order">
-                            <h3>Final Card Order</h3>
+                            <h3>{t('playerView.finalCardOrder')}</h3>
                             <div className="cards-reveal">
                                 {roomData.cardOrder?.map((card, idx) => (
                                     <div key={idx} className="card-reveal-item">
@@ -147,7 +163,7 @@ export default function PlayerView() {
                             </div>
                         </div>
 
-                        <p className="waiting-text">Waiting for moderator to start next round...</p>
+                        <p className="waiting-text">{t('playerView.waitingForModerator')}</p>
                     </div>
                 )}
             </div>

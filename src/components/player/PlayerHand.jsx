@@ -1,18 +1,21 @@
 import React from 'react';
 import Card from '../shared/Card';
 import { GAME_MODES } from '../../config/gameConfig';
+import { useLanguage } from '../../contexts/LanguageContext';
 import './PlayerHand.css';
 
 export default function PlayerHand({ cards, playerName, gameMode }) {
+    const { t } = useLanguage();
+
     if (!cards || cards.length === 0) {
         return null;
     }
 
     const isSimplified = gameMode === GAME_MODES.SIMPLIFIED;
-    const cardLabel = isSimplified ? 'Your Card' : 'Your Cards';
+    const cardLabel = isSimplified ? t('playerHand.yourCard') : t('playerHand.yourCards');
     const hintText = isSimplified
-        ? 'Use the scale below to place your card in the correct position'
-        : 'Use the scale below to place your cards in the correct order';
+        ? t('playerHand.hintSimplified')
+        : t('playerHand.hintAdventurous');
 
     return (
         <div className="player-hand">

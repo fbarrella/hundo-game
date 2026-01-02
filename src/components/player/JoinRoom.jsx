@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
+import LanguageSelector from '../shared/LanguageSelector';
 import hundoLogoText from '../../assets/hundo_logo_text_only.png';
 import './JoinRoom.css';
 
 export default function JoinRoom({ roomId, onJoin }) {
+    const { t } = useLanguage();
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -11,7 +14,7 @@ export default function JoinRoom({ roomId, onJoin }) {
         e.preventDefault();
 
         if (!name.trim()) {
-            setError('Please enter your name');
+            setError(t('joinRoom.errorEnterName'));
             return;
         }
 
@@ -21,24 +24,25 @@ export default function JoinRoom({ roomId, onJoin }) {
         try {
             await onJoin(name.trim());
         } catch (err) {
-            setError(err.message || 'Failed to join room');
+            setError(err.message || t('joinRoom.errorJoinFailed'));
             setLoading(false);
         }
     };
 
     return (
         <div className="join-room-container">
+            <LanguageSelector />
             <div className="join-room-content">
                 <img src={hundoLogoText} alt="Hundo" className="join-title" />
                 <div className="join-room-code">
-                    Room Code: <span>{roomId}</span>
+                    {t('joinRoom.roomCode')} <span>{roomId}</span>
                 </div>
 
                 <form onSubmit={handleSubmit} className="join-form-card">
-                    <h2>Enter Your Name</h2>
+                    <h2>{t('joinRoom.enterYourName')}</h2>
                     <input
                         type="text"
-                        placeholder="Your Name"
+                        placeholder={t('joinRoom.yourNamePlaceholder')}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         maxLength={20}
@@ -53,12 +57,12 @@ export default function JoinRoom({ roomId, onJoin }) {
                         className="btn-primary btn-large"
                         disabled={loading || !name.trim()}
                     >
-                        {loading ? 'Joining...' : 'Enter Room'}
+                        {loading ? t('joinRoom.joining') : t('joinRoom.enterRoom')}
                     </button>
                 </form>
 
                 <div className="join-hint">
-                    <p>Make sure you have the correct room code from your game host</p>
+                    <p>{t('joinRoom.hint')}</p>
                 </div>
             </div>
         </div>
