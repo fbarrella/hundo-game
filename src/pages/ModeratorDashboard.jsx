@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useRoomPolling } from '../services/pollingService';
-import { startRound, endRound, resetRound } from '../services/gameService';
+import { startRound, endRound, resetRound, endRoom } from '../services/gameService';
 import { generateRoomUrl, copyToClipboard } from '../utils/urlUtils';
 import { GAME_STATES, GAME_MODES } from '../config/gameConfig';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -14,6 +14,7 @@ import QRCode from "react-qr-code";
 
 export default function ModeratorDashboard() {
     const { roomId } = useParams();
+    const navigate = useNavigate();
     const { t } = useLanguage();
     const { roomData, loading, error, refetch } = useRoomPolling(roomId);
     const [actionLoading, setActionLoading] = useState(false);
@@ -61,6 +62,24 @@ export default function ModeratorDashboard() {
         } catch (error) {
             alert('Failed to reset round: ' + error.message);
         } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const handleEndRoom = async () => {
+        const confirmed = window.confirm(t('moderator.endRoomConfirm'));
+        if (!confirmed) return;
+
+        setActionLoading(true);
+        try {
+            await endRoom(roomId);
+            // Clear any local storage related to this room
+            localStorage.removeItem(`playerId_${roomId}`);
+            localStorage.removeItem(`playerName_${roomId}`);
+            // Redirect to home page
+            navigate('/');
+        } catch (error) {
+            alert('Failed to end room: ' + error.message);
             setActionLoading(false);
         }
     };
@@ -327,6 +346,16 @@ export default function ModeratorDashboard() {
                             {gameState === GAME_STATES.PLAYING && t('moderator.statusInProgress')}
                             {gameState === GAME_STATES.ENDED && t('moderator.statusRoundEnded')}
                         </div>
+                    </div>
+
+                    <div className="sidebar-section">
+                        <button
+                            className="btn-danger btn-end-room"
+                            onClick={handleEndRoom}
+                            disabled={actionLoading}
+                        >
+                            {actionLoading ? t('moderator.endingRoom') : t('moderator.endRoom')}
+                        </button>
                     </div>
                 </div>
             </div>

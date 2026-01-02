@@ -209,3 +209,18 @@ export async function updateScaleLabel(roomId, playerId, cardIndex, label) {
         throw error;
     }
 }
+
+/**
+ * End a room - delete it from the database
+ * @param {string} roomId - Room ID
+ * @returns {Promise<void>}
+ */
+export async function endRoom(roomId) {
+    try {
+        const { deleteRoom } = await import('./roomService');
+        await deleteRoom(roomId);
+    } catch (error) {
+        console.error('Error ending room:', error);
+        throw error;
+    }
+}

@@ -41,7 +41,9 @@
         "finalCardOrder": "Final Card Order",
         "waitingForModerator": "Waiting for moderator to start next round...",
         "loadingRoom": "Loading room...",
-        "error": "Error"
+        "error": "Error",
+        "roomEnded": "This room has been ended by the moderator.",
+        "returnHome": "Return to Home"
     },
     "moderator": {
         "moderatorView": "Moderator View",
@@ -75,7 +77,10 @@
         "statusWaiting": "Waiting",
         "statusInProgress": "In Progress",
         "statusRoundEnded": "Round Ended",
-        "noPlayers": "No players yet"
+        "noPlayers": "No players yet",
+        "endRoom": "End Room",
+        "endRoomConfirm": "Are you sure you want to end this room? This will remove all room data and disconnect all players. This action cannot be undone.",
+        "endingRoom": "Ending Room..."
     },
     "cardOrdering": {
         "cardOrder": "Card Order",

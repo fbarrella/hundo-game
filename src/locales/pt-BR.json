@@ -41,7 +41,9 @@
         "finalCardOrder": "Ordem Final das Cartas",
         "waitingForModerator": "Aguardando o moderador iniciar a próxima rodada...",
         "loadingRoom": "Carregando sala...",
-        "error": "Erro"
+        "error": "Erro",
+        "roomEnded": "Esta sala foi encerrada pelo moderador.",
+        "returnHome": "Voltar ao Início"
     },
     "moderator": {
         "moderatorView": "Visão do Moderador",
@@ -75,7 +77,10 @@
         "statusWaiting": "Aguardando",
         "statusInProgress": "Em Andamento",
         "statusRoundEnded": "Rodada Finalizada",
-        "noPlayers": "Nenhum jogador ainda"
+        "noPlayers": "Nenhum jogador ainda",
+        "endRoom": "Encerrar Sala",
+        "endRoomConfirm": "Tem certeza de que deseja encerrar esta sala? Isso removerá todos os dados da sala e desconectará todos os jogadores. Esta ação não pode ser desfeita.",
+        "endingRoom": "Encerrando Sala..."
     },
     "cardOrdering": {
         "cardOrder": "Ordem das Cartas",
