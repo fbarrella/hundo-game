@@ -211,14 +211,16 @@ export async function updateScaleLabel(roomId, playerId, cardIndex, label) {
 }
 
 /**
- * End a room - delete it from the database
+ * End a room - mark it as closed in the database
  * @param {string} roomId - Room ID
  * @returns {Promise<void>}
  */
 export async function endRoom(roomId) {
     try {
-        const { deleteRoom } = await import('./roomService');
-        await deleteRoom(roomId);
+        await updateRoom(roomId, {
+            roomClosed: true,
+            closedAt: new Date().toISOString()
+        });
     } catch (error) {
         console.error('Error ending room:', error);
         throw error;

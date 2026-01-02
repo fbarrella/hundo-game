@@ -20,6 +20,13 @@ export function useRoomPolling(roomId) {
         try {
             const data = await getRoomState(roomId);
             if (isMountedRef.current) {
+                // Check if room has been closed
+                if (data.roomClosed) {
+                    setError('Room has been closed by the moderator');
+                    setLoading(false);
+                    return;
+                }
+
                 setRoomData(data);
                 setError(null);
                 setLoading(false);

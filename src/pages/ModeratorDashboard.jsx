@@ -8,6 +8,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import LanguageSelector from '../components/shared/LanguageSelector';
 import ThemeDisplay from '../components/shared/ThemeDisplay';
 import Card from '../components/shared/Card';
+import ConfirmModal from '../components/shared/ConfirmModal';
 import hundoLogoText from '../assets/hundo_logo_text_only.png';
 import './ModeratorDashboard.css';
 import QRCode from "react-qr-code";
@@ -20,6 +21,7 @@ export default function ModeratorDashboard() {
     const [actionLoading, setActionLoading] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
     const [gameMode, setGameMode] = useState(GAME_MODES.ADVENTUROUS);
+    const [showEndRoomModal, setShowEndRoomModal] = useState(false);
 
     const handleCopyUrl = async () => {
         const url = generateRoomUrl(roomId);
@@ -67,19 +69,20 @@ export default function ModeratorDashboard() {
     };
 
     const handleEndRoom = async () => {
-        const confirmed = window.confirm(t('moderator.endRoomConfirm'));
-        if (!confirmed) return;
-
+        setShowEndRoomModal(false);
         setActionLoading(true);
         try {
+            // Mark room as closed
             await endRoom(roomId);
+
             // Clear any local storage related to this room
             localStorage.removeItem(`playerId_${roomId}`);
             localStorage.removeItem(`playerName_${roomId}`);
-            // Redirect to home page
+
+            // Redirect immediately to prevent seeing the closed room state
             navigate('/');
         } catch (error) {
-            alert('Failed to end room: ' + error.message);
+            console.error('Failed to end room:', error);
             setActionLoading(false);
         }
     };
@@ -351,7 +354,7 @@ export default function ModeratorDashboard() {
                     <div className="sidebar-section">
                         <button
                             className="btn-danger btn-end-room"
-                            onClick={handleEndRoom}
+                            onClick={() => setShowEndRoomModal(true)}
                             disabled={actionLoading}
                         >
                             {actionLoading ? t('moderator.endingRoom') : t('moderator.endRoom')}
@@ -359,6 +362,17 @@ export default function ModeratorDashboard() {
                     </div>
                 </div>
             </div>
+
+            <ConfirmModal
+                isOpen={showEndRoomModal}
+                title={t('moderator.endRoom')}
+                message={t('moderator.endRoomConfirm')}
+                confirmText={t('moderator.endRoom')}
+                cancelText={t('moderator.cancel')}
+                onConfirm={handleEndRoom}
+                onCancel={() => setShowEndRoomModal(false)}
+                isDanger={true}
+            />
         </div>
     );
 }

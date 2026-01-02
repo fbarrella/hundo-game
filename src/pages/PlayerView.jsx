@@ -64,7 +64,7 @@ export default function PlayerView() {
                 <LanguageSelector />
                 <div className="error-message">
                     <h2>{t('playerView.error')}</h2>
-                    <p>{error.includes('not found') ? t('playerView.roomEnded') : error}</p>
+                    <p>{error.toLowerCase().includes('closed') ? t('playerView.roomEnded') : error}</p>
                     <p>{t('playerView.room')} {roomId}</p>
                     <button className="btn-primary" onClick={handleReturnHome}>
                         {t('playerView.returnHome')}

@@ -80,7 +80,8 @@
         "noPlayers": "Nenhum jogador ainda",
         "endRoom": "Encerrar Sala",
         "endRoomConfirm": "Tem certeza de que deseja encerrar esta sala? Isso removerá todos os dados da sala e desconectará todos os jogadores. Esta ação não pode ser desfeita.",
-        "endingRoom": "Encerrando Sala..."
+        "endingRoom": "Encerrando Sala...",
+        "cancel": "Cancelar"
     },
     "cardOrdering": {
         "cardOrder": "Ordem das Cartas",
