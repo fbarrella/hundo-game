@@ -145,8 +145,7 @@ export default function CardOrderingInterface({
 
     const handleLabelChange = async (cardIndex, newLabel) => {
         try {
-            const roomData = { players: allPlayers };
-            await updateScaleLabel(roomId, playerId, cardIndex, newLabel, roomData);
+            await updateScaleLabel(roomId, playerId, cardIndex, newLabel);
         } catch (error) {
             console.error('Failed to update scale label:', error);
         }

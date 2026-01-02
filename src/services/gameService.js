@@ -178,12 +178,15 @@ export async function resetRound(roomId, roomData) {
  * @param {string} playerId - Player ID
  * @param {number} cardIndex - Index of the card (0 or 1)
  * @param {string} label - Scale label text
- * @param {Object} roomData - Current room data
  * @returns {Promise<void>}
  */
-export async function updateScaleLabel(roomId, playerId, cardIndex, label, roomData) {
+export async function updateScaleLabel(roomId, playerId, cardIndex, label) {
     try {
-        const updatedPlayers = { ...roomData.players };
+        // Fetch fresh room data to avoid race conditions with polling
+        const { getRoomState } = await import('./roomService');
+        const freshRoomData = await getRoomState(roomId);
+
+        const updatedPlayers = { ...freshRoomData.players };
         const player = updatedPlayers[playerId];
 
         if (!player) {
