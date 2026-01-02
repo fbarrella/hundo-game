@@ -1,15 +1,57 @@
 .language-selector {
     position: fixed;
     top: 20px;
-    right: 20px;
+    right: 0;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+/* Collapsed state - only show indicator */
+.language-selector {
+    transform: translateX(calc(100% - 12px));
+}
+
+/* Expanded state on hover */
+.language-selector:hover {
+    transform: translateX(0);
+}
+
+/* Hover indicator - visible when collapsed */
+.language-selector::before {
+    content: '◀';
+    position: absolute;
+    left: -24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 8px 6px;
+    border-radius: 8px 0 0 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: none;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.language-selector:hover::before {
+    opacity: 0;
+}
+
+/* Container for flag buttons */
+.language-selector-buttons {
     display: flex;
     gap: 8px;
-    z-index: 1000;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     padding: 8px;
-    border-radius: 12px;
+    border-radius: 12px 0 0 12px;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -46,7 +88,16 @@
 @media (max-width: 768px) {
     .language-selector {
         top: 10px;
-        right: 10px;
+        transform: translateX(calc(100% - 10px));
+    }
+
+    .language-selector::before {
+        left: -20px;
+        font-size: 10px;
+        padding: 6px 4px;
+    }
+
+    .language-selector-buttons {
         padding: 6px;
         gap: 6px;
     }
