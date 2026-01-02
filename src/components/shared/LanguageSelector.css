@@ -8,38 +8,67 @@
     transition: transform 0.3s ease;
 }
 
-/* Collapsed state - only show indicator */
+/* Collapsed state - only show toggle button */
 .language-selector {
-    transform: translateX(calc(100% - 12px));
+    transform: translateX(calc(100% - 44px));
 }
 
-/* Expanded state on hover */
-.language-selector:hover {
+/* Expanded state when toggled */
+.language-selector.expanded {
     transform: translateX(0);
 }
 
-/* Hover indicator - visible when collapsed */
-.language-selector::before {
-    content: '◀';
+/* Toggle button - always visible */
+.language-selector-toggle {
     position: absolute;
-    left: -24px;
+    left: 0;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
-    padding: 8px 6px;
-    border-radius: 8px 0 0 8px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-right: none;
-    pointer-events: none;
-    opacity: 1;
-    transition: opacity 0.3s ease;
+    border-radius: 8px 0 0 8px;
+    padding: 8px 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1;
+    width: 36px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.language-selector:hover::before {
-    opacity: 0;
+.language-selector-toggle:hover {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.language-selector-toggle:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.toggle-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* Pulse animation for toggle button to indicate interactivity */
+.language-selector:not(.expanded) .language-selector-toggle {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0);
+    }
 }
 
 /* Container for flag buttons */
@@ -49,6 +78,7 @@
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     padding: 8px;
+    padding-left: 44px;
     border-radius: 12px 0 0 12px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-right: none;
@@ -74,12 +104,17 @@
     transform: scale(1.1);
 }
 
+.language-button:active {
+    transform: scale(0.95);
+}
+
 .language-button.active {
     border-color: var(--primary-color, #4CAF50);
     background: rgba(76, 175, 80, 0.2);
 }
 
-.language-button:focus {
+.language-button:focus,
+.language-selector-toggle:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
 }
@@ -88,17 +123,22 @@
 @media (max-width: 768px) {
     .language-selector {
         top: 10px;
-        transform: translateX(calc(100% - 10px));
+        transform: translateX(calc(100% - 38px));
     }
 
-    .language-selector::before {
-        left: -20px;
-        font-size: 10px;
+    .language-selector-toggle {
+        width: 32px;
+        height: 38px;
         padding: 6px 4px;
+    }
+
+    .toggle-icon {
+        font-size: 18px;
     }
 
     .language-selector-buttons {
         padding: 6px;
+        padding-left: 38px;
         gap: 6px;
     }
 
