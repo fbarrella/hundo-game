@@ -81,7 +81,15 @@
         "endRoom": "End Room",
         "endRoomConfirm": "Are you sure you want to end this room? This will remove all room data and disconnect all players. This action cannot be undone.",
         "endingRoom": "Ending Room...",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "joinAsPlayer": "Join as Player",
+        "enterYourName": "Enter your name",
+        "joinGame": "Join Game",
+        "youJoinedAs": "You joined as",
+        "leaveGame": "Leave Game",
+        "youAreModerator": "You are the Moderator",
+        "onlyYouCanEndRound": "Only you can end the round",
+        "endRoomDisabledDuringPlay": "Room controls disabled during gameplay"
     },
     "cardOrdering": {
         "cardOrder": "Card Order",
