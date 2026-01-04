@@ -81,7 +81,15 @@
         "endRoom": "Encerrar Sala",
         "endRoomConfirm": "Tem certeza de que deseja encerrar esta sala? Isso removerá todos os dados da sala e desconectará todos os jogadores. Esta ação não pode ser desfeita.",
         "endingRoom": "Encerrando Sala...",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "joinAsPlayer": "Entrar como Jogador",
+        "enterYourName": "Digite seu nome",
+        "joinGame": "Entrar no Jogo",
+        "youJoinedAs": "Você entrou como",
+        "leaveGame": "Sair do Jogo",
+        "youAreModerator": "Você é o Moderador",
+        "onlyYouCanEndRound": "Somente você pode finalizar a rodada",
+        "endRoomDisabledDuringPlay": "Controles da sala desabilitados durante o jogo"
     },
     "cardOrdering": {
         "cardOrder": "Ordem das Cartas",

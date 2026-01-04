@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useRoomPolling } from '../services/pollingService';
 import { startRound, endRound, resetRound, endRoom } from '../services/gameService';
+import { joinRoomAsModerator, leaveRoomAsModerator } from '../services/roomService';
 import { generateRoomUrl, copyToClipboard } from '../utils/urlUtils';
 import { GAME_STATES, GAME_MODES } from '../config/gameConfig';
 import { useLanguage } from '../contexts/LanguageContext';
 import LanguageSelector from '../components/shared/LanguageSelector';
 import ThemeDisplay from '../components/shared/ThemeDisplay';
+import PlayerHand from '../components/player/PlayerHand';
+import CardOrderingInterface from '../components/player/CardOrderingInterface';
 import Card from '../components/shared/Card';
 import ConfirmModal from '../components/shared/ConfirmModal';
 import hundoLogoText from '../assets/hundo_logo_text_only.png';
@@ -22,6 +25,18 @@ export default function ModeratorDashboard() {
     const [copySuccess, setCopySuccess] = useState(false);
     const [gameMode, setGameMode] = useState(GAME_MODES.ADVENTUROUS);
     const [showEndRoomModal, setShowEndRoomModal] = useState(false);
+    const [moderatorPlayerName, setModeratorPlayerName] = useState('');
+    const [moderatorPlayerId, setModeratorPlayerId] = useState(null);
+
+    // Load moderator player ID from localStorage
+    React.useEffect(() => {
+        const savedModeratorPlayerId = localStorage.getItem(`moderatorPlayerId_${roomId}`);
+        const savedModeratorPlayerName = localStorage.getItem(`moderatorPlayerName_${roomId}`);
+        if (savedModeratorPlayerId && savedModeratorPlayerName) {
+            setModeratorPlayerId(savedModeratorPlayerId);
+            setModeratorPlayerName(savedModeratorPlayerName);
+        }
+    }, [roomId]);
 
     const handleCopyUrl = async () => {
         const url = generateRoomUrl(roomId);
@@ -29,6 +44,41 @@ export default function ModeratorDashboard() {
         if (success) {
             setCopySuccess(true);
             setTimeout(() => setCopySuccess(false), 2000);
+        }
+    };
+
+    const handleJoinAsModerator = async () => {
+        if (!moderatorPlayerName.trim()) return;
+
+        setActionLoading(true);
+        try {
+            const playerId = await joinRoomAsModerator(roomId, moderatorPlayerName.trim());
+            setModeratorPlayerId(playerId);
+            localStorage.setItem(`moderatorPlayerId_${roomId}`, playerId);
+            localStorage.setItem(`moderatorPlayerName_${roomId}`, moderatorPlayerName.trim());
+            await refetch();
+        } catch (error) {
+            alert('Failed to join as player: ' + error.message);
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const handleLeaveAsModerator = async () => {
+        if (!moderatorPlayerId) return;
+
+        setActionLoading(true);
+        try {
+            await leaveRoomAsModerator(roomId, moderatorPlayerId);
+            setModeratorPlayerId(null);
+            setModeratorPlayerName('');
+            localStorage.removeItem(`moderatorPlayerId_${roomId}`);
+            localStorage.removeItem(`moderatorPlayerName_${roomId}`);
+            await refetch();
+        } catch (error) {
+            alert('Failed to leave as player: ' + error.message);
+        } finally {
+            setActionLoading(false);
         }
     };
 
@@ -78,6 +128,8 @@ export default function ModeratorDashboard() {
             // Clear any local storage related to this room
             localStorage.removeItem(`playerId_${roomId}`);
             localStorage.removeItem(`playerName_${roomId}`);
+            localStorage.removeItem(`moderatorPlayerId_${roomId}`);
+            localStorage.removeItem(`moderatorPlayerName_${roomId}`);
 
             // Redirect immediately to prevent seeing the closed room state
             navigate('/');
@@ -112,6 +164,9 @@ export default function ModeratorDashboard() {
     const playerCount = Object.keys(players).length;
     const gameState = roomData?.gameState;
     const allCards = roomData?.cardOrder || [];
+    const isModerator = true; // Always true in moderator dashboard
+    const isModeratorPlayer = moderatorPlayerId && players[moderatorPlayerId];
+    const moderatorPlayer = isModeratorPlayer ? players[moderatorPlayerId] : null;
 
     return (
         <div className="moderator-dashboard">
@@ -154,14 +209,52 @@ export default function ModeratorDashboard() {
                                 <QRCode value={generateRoomUrl(roomId)} size={128} />
                             </div>
 
+                            <div className="moderator-join-section">
+                                <h3>{t('moderator.joinAsPlayer')}</h3>
+                                {!isModeratorPlayer ? (
+                                    <div className="join-form">
+                                        <input
+                                            type="text"
+                                            placeholder={t('moderator.enterYourName')}
+                                            value={moderatorPlayerName}
+                                            onChange={(e) => setModeratorPlayerName(e.target.value)}
+                                            onKeyPress={(e) => e.key === 'Enter' && handleJoinAsModerator()}
+                                            disabled={actionLoading}
+                                            className="name-input"
+                                        />
+                                        <button
+                                            className="btn-primary"
+                                            onClick={handleJoinAsModerator}
+                                            disabled={!moderatorPlayerName.trim() || actionLoading}
+                                        >
+                                            {t('moderator.joinGame')}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="joined-status">
+                                        <span className="joined-text">✓ {t('moderator.youJoinedAs')} {moderatorPlayerName}</span>
+                                        <button
+                                            className="btn-outline btn-small"
+                                            onClick={handleLeaveAsModerator}
+                                            disabled={actionLoading}
+                                        >
+                                            {t('moderator.leaveGame')}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
                             {playerCount > 0 && (
                                 <div className="players-grid">
                                     {Object.entries(players).map(([id, player]) => (
-                                        <div key={id} className="player-card-waiting">
+                                        <div key={id} className={`player-card-waiting ${id === moderatorPlayerId ? 'moderator-player' : ''}`}>
                                             <div className="player-avatar">
                                                 {player.name.charAt(0).toUpperCase()}
                                             </div>
-                                            <div className="player-name">{player.name}</div>
+                                            <div className="player-name">
+                                                {player.name}
+                                                {id === moderatorPlayerId && <span className="moderator-badge"> (You)</span>}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -220,61 +313,99 @@ export default function ModeratorDashboard() {
                                 themeInterval={roomData.themeInterval}
                             />
 
-                            <div className="game-area">
-                                <h3>{t('moderator.playerCards')}</h3>
-                                <div className="players-cards-grid">
-                                    {Object.entries(players).map(([id, player]) => (
-                                        <div key={id} className="player-section">
-                                            <div className="player-header-card">
-                                                <div className="player-avatar-small">
-                                                    {player.name.charAt(0).toUpperCase()}
-                                                </div>
-                                                <span>{player.name}</span>
-                                            </div>
-                                            <div className="player-cards">
-                                                {player.cards?.map((cardNum, idx) => (
-                                                    <Card
-                                                        key={idx}
-                                                        number={cardNum}
-                                                        isRevealed={false}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                            {isModeratorPlayer ? (
+                                // Moderator is playing - show player view with moderator controls
+                                <div className="moderator-player-view">
+                                    <div className="moderator-indicator">
+                                        <span className="crown-icon">👑</span>
+                                        <span>{t('moderator.youAreModerator')}</span>
+                                    </div>
 
-                                <div className="current-order">
-                                    <h3>{t('moderator.currentCardOrder')}</h3>
-                                    <div className="order-visualization">
-                                        {Object.entries(players).flatMap(([id, player]) =>
-                                            player.cards?.map((cardNum, idx) => ({
-                                                playerId: id,
-                                                playerName: player.name,
-                                                cardNumber: cardNum,
-                                                position: player.cardPositions?.[idx] ?? 999
-                                            }))
-                                        )
-                                            .sort((a, b) => a.position - b.position)
-                                            .map((card, idx) => (
-                                                <div key={idx} className="order-slot">
-                                                    <div className="slot-number">{idx + 1}</div>
-                                                    <div className="slot-player">{card.playerName}</div>
-                                                    <div className="slot-card">{t('moderator.card')} {card.position !== 999 ? '✓' : '?'}</div>
-                                                </div>
-                                            ))
-                                        }
+                                    <PlayerHand
+                                        cards={moderatorPlayer.cards}
+                                        playerName={moderatorPlayerName}
+                                        gameMode={roomData.gameMode}
+                                    />
+
+                                    <CardOrderingInterface
+                                        roomId={roomId}
+                                        playerId={moderatorPlayerId}
+                                        playerCards={moderatorPlayer.cards}
+                                        playerPositions={moderatorPlayer.cardPositions}
+                                        allPlayers={roomData.players}
+                                    />
+
+                                    <div className="moderator-controls">
+                                        <button
+                                            className="btn-danger btn-large"
+                                            onClick={handleEndRound}
+                                            disabled={actionLoading}
+                                        >
+                                            {actionLoading ? t('moderator.ending') : t('moderator.endRound')}
+                                        </button>
+                                        <p className="moderator-note">{t('moderator.onlyYouCanEndRound')}</p>
                                     </div>
                                 </div>
-                            </div>
+                            ) : (
+                                // Moderator is not playing - show traditional moderator view
+                                <>
+                                    <div className="game-area">
+                                        <h3>{t('moderator.playerCards')}</h3>
+                                        <div className="players-cards-grid">
+                                            {Object.entries(players).map(([id, player]) => (
+                                                <div key={id} className="player-section">
+                                                    <div className="player-header-card">
+                                                        <div className="player-avatar-small">
+                                                            {player.name.charAt(0).toUpperCase()}
+                                                        </div>
+                                                        <span>{player.name}</span>
+                                                    </div>
+                                                    <div className="player-cards">
+                                                        {player.cards?.map((cardNum, idx) => (
+                                                            <Card
+                                                                key={idx}
+                                                                number={cardNum}
+                                                                isRevealed={false}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
 
-                            <button
-                                className="btn-danger btn-large"
-                                onClick={handleEndRound}
-                                disabled={actionLoading}
-                            >
-                                {actionLoading ? t('moderator.ending') : t('moderator.endRound')}
-                            </button>
+                                        <div className="current-order">
+                                            <h3>{t('moderator.currentCardOrder')}</h3>
+                                            <div className="order-visualization">
+                                                {Object.entries(players).flatMap(([id, player]) =>
+                                                    player.cards?.map((cardNum, idx) => ({
+                                                        playerId: id,
+                                                        playerName: player.name,
+                                                        cardNumber: cardNum,
+                                                        position: player.cardPositions?.[idx] ?? 999
+                                                    }))
+                                                )
+                                                    .sort((a, b) => a.position - b.position)
+                                                    .map((card, idx) => (
+                                                        <div key={idx} className="order-slot">
+                                                            <div className="slot-number">{idx + 1}</div>
+                                                            <div className="slot-player">{card.playerName}</div>
+                                                            <div className="slot-card">{t('moderator.card')} {card.position !== 999 ? '✓' : '?'}</div>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        className="btn-danger btn-large"
+                                        onClick={handleEndRound}
+                                        disabled={actionLoading}
+                                    >
+                                        {actionLoading ? t('moderator.ending') : t('moderator.endRound')}
+                                    </button>
+                                </>
+                            )}
                         </>
                     )}
 
@@ -355,10 +486,13 @@ export default function ModeratorDashboard() {
                         <button
                             className="btn-danger btn-end-room"
                             onClick={() => setShowEndRoomModal(true)}
-                            disabled={actionLoading}
+                            disabled={actionLoading || gameState === GAME_STATES.PLAYING}
                         >
                             {actionLoading ? t('moderator.endingRoom') : t('moderator.endRoom')}
                         </button>
+                        {gameState === GAME_STATES.PLAYING && (
+                            <p className="sidebar-note">{t('moderator.endRoomDisabledDuringPlay')}</p>
+                        )}
                     </div>
                 </div>
             </div>

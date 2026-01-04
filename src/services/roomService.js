@@ -25,7 +25,8 @@ export async function createRoom() {
         themeCard: null,
         themeInterval: null,
         players: {},
-        cardOrder: []
+        cardOrder: [],
+        moderatorPlayerId: null
     };
 
     try {
@@ -72,6 +73,75 @@ export async function joinRoom(roomId, playerName) {
         return playerId;
     } catch (error) {
         console.error('Error joining room:', error);
+        throw error;
+    }
+}
+
+/**
+ * Join a room as the moderator (also as a player)
+ * @param {string} roomId - Room ID to join
+ * @param {string} playerName - Moderator's player name
+ * @returns {Promise<string>} Player ID
+ */
+export async function joinRoomAsModerator(roomId, playerName) {
+    const playerId = uuidv4();
+
+    try {
+        const roomRef = doc(db, 'rooms', roomId);
+        const roomSnap = await getDoc(roomRef);
+
+        if (!roomSnap.exists()) {
+            throw new Error('Room not found');
+        }
+
+        const roomData = roomSnap.data();
+        const updatedPlayers = {
+            ...roomData.players,
+            [playerId]: {
+                name: playerName,
+                cards: [],
+                cardPositions: [],
+                joinedAt: new Date().toISOString()
+            }
+        };
+
+        await updateDoc(roomRef, {
+            players: updatedPlayers,
+            moderatorPlayerId: playerId
+        });
+
+        return playerId;
+    } catch (error) {
+        console.error('Error joining room as moderator:', error);
+        throw error;
+    }
+}
+
+/**
+ * Remove moderator from players
+ * @param {string} roomId - Room ID
+ * @param {string} playerId - Moderator's player ID
+ * @returns {Promise<void>}
+ */
+export async function leaveRoomAsModerator(roomId, playerId) {
+    try {
+        const roomRef = doc(db, 'rooms', roomId);
+        const roomSnap = await getDoc(roomRef);
+
+        if (!roomSnap.exists()) {
+            throw new Error('Room not found');
+        }
+
+        const roomData = roomSnap.data();
+        const updatedPlayers = { ...roomData.players };
+        delete updatedPlayers[playerId];
+
+        await updateDoc(roomRef, {
+            players: updatedPlayers,
+            moderatorPlayerId: null
+        });
+    } catch (error) {
+        console.error('Error leaving room as moderator:', error);
         throw error;
     }
 }
