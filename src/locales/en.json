@@ -43,7 +43,9 @@
         "loadingRoom": "Loading room...",
         "error": "Error",
         "roomEnded": "This room has been ended by the moderator.",
-        "returnHome": "Return to Home"
+        "returnHome": "Return to Home",
+        "kickedFromRoom": "You have been removed from this room by the moderator.",
+        "cannotRejoin": "You cannot rejoin this room."
     },
     "moderator": {
         "moderatorView": "Moderator View",
@@ -89,7 +91,11 @@
         "leaveGame": "Leave Game",
         "youAreModerator": "You are the Moderator",
         "onlyYouCanEndRound": "Only you can end the round",
-        "endRoomDisabledDuringPlay": "Room controls disabled during gameplay"
+        "endRoomDisabledDuringPlay": "Room controls disabled during gameplay",
+        "kickPlayer": "Kick Player",
+        "kickPlayerConfirm": "Are you sure you want to kick {playerName} from the room? They will not be able to rejoin.",
+        "kickingPlayer": "Kicking...",
+        "playerKicked": "Player kicked successfully"
     },
     "cardOrdering": {
         "cardOrder": "Card Order",

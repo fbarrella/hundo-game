@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useRoomPolling } from '../services/pollingService';
 import { startRound, endRound, resetRound, endRoom } from '../services/gameService';
-import { joinRoomAsModerator, leaveRoomAsModerator } from '../services/roomService';
+import { joinRoomAsModerator, leaveRoomAsModerator, kickPlayer } from '../services/roomService';
 import { generateRoomUrl, copyToClipboard } from '../utils/urlUtils';
 import { GAME_STATES, GAME_MODES } from '../config/gameConfig';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -27,6 +27,8 @@ export default function ModeratorDashboard() {
     const [showEndRoomModal, setShowEndRoomModal] = useState(false);
     const [moderatorPlayerName, setModeratorPlayerName] = useState('');
     const [moderatorPlayerId, setModeratorPlayerId] = useState(null);
+    const [showKickModal, setShowKickModal] = useState(false);
+    const [playerToKick, setPlayerToKick] = useState(null);
 
     // Load moderator player ID from localStorage
     React.useEffect(() => {
@@ -137,6 +139,27 @@ export default function ModeratorDashboard() {
             console.error('Failed to end room:', error);
             setActionLoading(false);
         }
+    };
+
+    const handleKickPlayer = async () => {
+        if (!playerToKick) return;
+
+        setShowKickModal(false);
+        setActionLoading(true);
+        try {
+            await kickPlayer(roomId, playerToKick.id);
+            await refetch();
+        } catch (error) {
+            alert('Failed to kick player: ' + error.message);
+        } finally {
+            setActionLoading(false);
+            setPlayerToKick(null);
+        }
+    };
+
+    const initiateKick = (playerId, playerName) => {
+        setPlayerToKick({ id: playerId, name: playerName });
+        setShowKickModal(true);
     };
 
     if (loading && !roomData) {
@@ -255,6 +278,16 @@ export default function ModeratorDashboard() {
                                                 {player.name}
                                                 {id === moderatorPlayerId && <span className="moderator-badge"> (You)</span>}
                                             </div>
+                                            {id !== moderatorPlayerId && (
+                                                <button
+                                                    className="btn-kick-small"
+                                                    onClick={() => initiateKick(id, player.name)}
+                                                    disabled={actionLoading}
+                                                    title={t('moderator.kickPlayer')}
+                                                >
+                                                    🚫
+                                                </button>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -359,6 +392,16 @@ export default function ModeratorDashboard() {
                                                             {player.name.charAt(0).toUpperCase()}
                                                         </div>
                                                         <span>{player.name}</span>
+                                                        {id !== moderatorPlayerId && (
+                                                            <button
+                                                                className="btn-kick-inline"
+                                                                onClick={() => initiateKick(id, player.name)}
+                                                                disabled={actionLoading}
+                                                                title={t('moderator.kickPlayer')}
+                                                            >
+                                                                🚫
+                                                            </button>
+                                                        )}
                                                     </div>
                                                     <div className="player-cards">
                                                         {player.cards?.map((cardNum, idx) => (
@@ -464,7 +507,19 @@ export default function ModeratorDashboard() {
                                         {player.name.charAt(0).toUpperCase()}
                                     </div>
                                     <span>{player.name}</span>
-                                    <div className="player-status">●</div>
+                                    <div className="player-actions">
+                                        <div className="player-status">●</div>
+                                        {id !== moderatorPlayerId && (
+                                            <button
+                                                className="btn-kick-icon"
+                                                onClick={() => initiateKick(id, player.name)}
+                                                disabled={actionLoading}
+                                                title={t('moderator.kickPlayer')}
+                                            >
+                                                🚫
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
                             {playerCount === 0 && (
@@ -505,6 +560,20 @@ export default function ModeratorDashboard() {
                 cancelText={t('moderator.cancel')}
                 onConfirm={handleEndRoom}
                 onCancel={() => setShowEndRoomModal(false)}
+                isDanger={true}
+            />
+
+            <ConfirmModal
+                isOpen={showKickModal}
+                title={t('moderator.kickPlayer')}
+                message={playerToKick ? t('moderator.kickPlayerConfirm').replace('{playerName}', playerToKick.name) : ''}
+                confirmText={t('moderator.kickPlayer')}
+                cancelText={t('moderator.cancel')}
+                onConfirm={handleKickPlayer}
+                onCancel={() => {
+                    setShowKickModal(false);
+                    setPlayerToKick(null);
+                }}
                 isDanger={true}
             />
         </div>

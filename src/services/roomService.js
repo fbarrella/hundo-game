@@ -26,7 +26,8 @@ export async function createRoom() {
         themeInterval: null,
         players: {},
         cardOrder: [],
-        moderatorPlayerId: null
+        moderatorPlayerId: null,
+        kickedPlayers: []
     };
 
     try {
@@ -56,6 +57,11 @@ export async function joinRoom(roomId, playerName) {
         }
 
         const roomData = roomSnap.data();
+
+        // Check if player is blacklisted
+        if (roomData.kickedPlayers?.includes(playerId)) {
+            throw new Error('You have been removed from this room');
+        }
         const updatedPlayers = {
             ...roomData.players,
             [playerId]: {
@@ -95,6 +101,12 @@ export async function joinRoomAsModerator(roomId, playerName) {
         }
 
         const roomData = roomSnap.data();
+
+        // Check if player is blacklisted
+        if (roomData.kickedPlayers?.includes(playerId)) {
+            throw new Error('You have been removed from this room');
+        }
+
         const updatedPlayers = {
             ...roomData.players,
             [playerId]: {
@@ -177,6 +189,40 @@ export async function deleteRoom(roomId) {
         await deleteDoc(doc(db, 'rooms', roomId));
     } catch (error) {
         console.error('Error deleting room:', error);
+        throw error;
+    }
+}
+
+/**
+ * Kick a player from the room and add to blacklist
+ * @param {string} roomId - Room ID
+ * @param {string} playerId - Player ID to kick
+ * @returns {Promise<void>}
+ */
+export async function kickPlayer(roomId, playerId) {
+    try {
+        const roomRef = doc(db, 'rooms', roomId);
+        const roomSnap = await getDoc(roomRef);
+
+        if (!roomSnap.exists()) {
+            throw new Error('Room not found');
+        }
+
+        const roomData = roomSnap.data();
+        const updatedPlayers = { ...roomData.players };
+        delete updatedPlayers[playerId];
+
+        const kickedPlayers = roomData.kickedPlayers || [];
+        if (!kickedPlayers.includes(playerId)) {
+            kickedPlayers.push(playerId);
+        }
+
+        await updateDoc(roomRef, {
+            players: updatedPlayers,
+            kickedPlayers: kickedPlayers
+        });
+    } catch (error) {
+        console.error('Error kicking player:', error);
         throw error;
     }
 }

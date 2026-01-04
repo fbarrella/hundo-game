@@ -43,7 +43,9 @@
         "loadingRoom": "Carregando sala...",
         "error": "Erro",
         "roomEnded": "Esta sala foi encerrada pelo moderador.",
-        "returnHome": "Voltar ao Início"
+        "returnHome": "Voltar ao Início",
+        "kickedFromRoom": "Você foi removido desta sala pelo moderador.",
+        "cannotRejoin": "Você não pode entrar novamente nesta sala."
     },
     "moderator": {
         "moderatorView": "Visão do Moderador",
@@ -89,7 +91,11 @@
         "leaveGame": "Sair do Jogo",
         "youAreModerator": "Você é o Moderador",
         "onlyYouCanEndRound": "Somente você pode finalizar a rodada",
-        "endRoomDisabledDuringPlay": "Controles da sala desabilitados durante o jogo"
+        "endRoomDisabledDuringPlay": "Controles da sala desabilitados durante o jogo",
+        "kickPlayer": "Expulsar Jogador",
+        "kickPlayerConfirm": "Tem certeza de que deseja expulsar {playerName} da sala? Eles não poderão entrar novamente.",
+        "kickingPlayer": "Expulsando...",
+        "playerKicked": "Jogador expulso com sucesso"
     },
     "cardOrdering": {
         "cardOrder": "Ordem das Cartas",
