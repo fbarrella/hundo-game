@@ -157,6 +157,91 @@
     color: white;
 }
 
+/* Kick Button Styles */
+.btn-kick-small {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(235, 51, 73, 0.2);
+    border: 1px solid rgba(235, 51, 73, 0.4);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    opacity: 0.7;
+}
+
+.btn-kick-small:hover:not(:disabled) {
+    background: rgba(235, 51, 73, 0.4);
+    border-color: rgba(235, 51, 73, 0.6);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.btn-kick-small:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.player-card-waiting {
+    position: relative;
+}
+
+.btn-kick-icon {
+    background: rgba(235, 51, 73, 0.2);
+    border: 1px solid rgba(235, 51, 73, 0.4);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    opacity: 0.7;
+}
+
+.btn-kick-icon:hover:not(:disabled) {
+    background: rgba(235, 51, 73, 0.4);
+    border-color: rgba(235, 51, 73, 0.6);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.btn-kick-icon:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.btn-kick-inline {
+    background: rgba(235, 51, 73, 0.2);
+    border: 1px solid rgba(235, 51, 73, 0.4);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    margin-left: auto;
+    opacity: 0.7;
+}
+
+.btn-kick-inline:hover:not(:disabled) {
+    background: rgba(235, 51, 73, 0.4);
+    border-color: rgba(235, 51, 73, 0.6);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.btn-kick-inline:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.player-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-left: auto;
+}
+
 /* Difficulty Selector Styles */
 .difficulty-selector {
     margin: var(--spacing-xl) 0;
@@ -631,18 +716,24 @@
 
 /* Animations */
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 0 0 0 rgba(56, 239, 125, 0.4);
     }
+
     50% {
         box-shadow: 0 0 0 10px rgba(56, 239, 125, 0);
     }
 }
 
 @keyframes bounce {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-5px);
     }

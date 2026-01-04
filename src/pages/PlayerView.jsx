@@ -75,6 +75,28 @@ export default function PlayerView() {
     }
 
     if (!playerId || !roomData?.players?.[playerId]) {
+        // Check if player was kicked (had playerId but is no longer in players list)
+        const savedPlayerId = localStorage.getItem(`playerId_${roomId}`);
+        const savedPlayerName = localStorage.getItem(`playerName_${roomId}`);
+
+        if (savedPlayerId && roomData && !roomData.players?.[savedPlayerId]) {
+            // Player was previously joined but is now missing - likely kicked
+            return (
+                <div className="player-view">
+                    <LanguageSelector />
+                    <div className="error-message">
+                        <h2>{t('playerView.error')}</h2>
+                        <p>{t('playerView.kickedFromRoom')}</p>
+                        <p>{t('playerView.cannotRejoin')}</p>
+                        <p>{t('playerView.room')} {roomId}</p>
+                        <button className="btn-primary" onClick={handleReturnHome}>
+                            {t('playerView.returnHome')}
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
         return <JoinRoom roomId={roomId} onJoin={handleJoinRoom} />;
     }
 
